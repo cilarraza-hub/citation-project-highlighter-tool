@@ -6,6 +6,12 @@
   <title>Text Highlighter and Categorizer</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
+
+    /* NEW: top bar for legend + results */
+    .topbar { margin-bottom: 12px; }
+    .legend { margin: 0; padding: 10px; border: 1px solid #ccc; background-color: #fafafa; }
+    #result { margin-top: 8px; min-height: 20px; font-weight: 600; }
+
     #output { border: 1px solid #ccc; padding: 10px; min-height: 150px; white-space: pre-wrap; cursor: text; }
     .highlight { padding: 2px; border-radius: 4px; background-color: yellow; cursor: pointer; }
     .Background { background-color: #FFF4CC !important; }
@@ -16,7 +22,6 @@
     .category-menu button { display: block; width: 100%; border: none; background: none; padding: 8px 12px; text-align: left; cursor: pointer; }
     .category-menu button:hover { background-color: #f0f0f0; }
 
-    .legend { margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fafafa; }
     .legend-item { display: inline-block; margin-right: 15px; }
     .legend-color { display: inline-block; width: 16px; height: 16px; vertical-align: middle; margin-right: 5px; border-radius: 4px; }
     .bg-yellow { background-color: #FFF4CC; }
@@ -26,24 +31,27 @@
     /* Button + feedback */
     .btn { display:inline-block; margin-top:12px; padding:10px 14px; border:0; border-radius:8px; background:#1f6feb; color:#fff; font-weight:600; box-shadow:0 2px 6px rgba(0,0,0,.15); cursor:pointer; }
     .btn:hover { filter: brightness(1.05); }
-    #result { margin-top:10px; min-height: 20px; font-weight: 600; }
   </style>
 </head>
 <body>
+
+  <!-- MOVED: Legend + Results now ABOVE the text -->
+  <div class="topbar">
+    <div class="legend">
+      <strong>Legend:</strong>
+      <span class="legend-item"><span class="legend-color bg-yellow"></span> Background</span>
+      <span class="legend-item"><span class="legend-color bg-blue"></span> Compare</span>
+      <span class="legend-item"><span class="legend-color bg-green"></span> Connect</span>
+    </div>
+
+    <div id="result" aria-live="polite"></div>
+  </div>
+
   <div id="output" contenteditable="true">
     <p>However, research suggests that some scholars are more advantaged in capturing citations than others. Analyses across multiple disciplines confirm the presence of a gender citation gap, whereby male scholars achieve a higher number of citations to their work than female scholars in the same fields. While some subfields' citation networks are male-dominated because there are few female scholars to be cited (a "Matthew effect"), women's research may also be less central in the network of scholarly citations, and a "Matilda effect" can emerge (Rossiter 1993), where women's contributions are less recognized or where women's research findings are attributed to other male scholars. Yet there are differences across academic disciplines suggesting that the context within which female scholars publish can matter for the accruing of scholarly citations. Ferber's (1988) analyses of citation patterns in multiple disciplines suggest that the presence of a critical mass of female scholars could help to eliminate the citation gender gap.<br>
       We use a broader set of articles than previous studies by using a tool for coding the gender of authors in scholarly studies (Teele and Thelen 2017; Sumner 2018). Our analyses show that female authors are significantly more likely than male authors to cite studies by female authors and that mixed gender teams have statistically similar, but slightly higher odds of citing studies by women compared to male author teams. While this relationship is broadly consistent across disciplines and subfields, we also observe that women have much higher odds than men of citing work by women, and that the odds increase as fields become more male-dominated. The baseline average probability that an article reference will be written by a woman varies based on the proportion of women in the discipline or subfield. Our results show that gender diversity across disciplines in the social sciences and within subfields of political science influences the attention and impact of work by female scholars.<br>
      We start with a basic question about gendered variance in citations: do women faculty receive fewer citations to their journal articles than male faculty? Several disciplines produce evidence of lower citation levels for female scholars compared to male scholars in the same field including economics (Ferber 1988; Ferber and Brun 2011), ecology (Cameron, White, and Gray 2016), political science (Dion and Mitchell 2012; Maliniak, Powers, and Walter 2013; Mitchell, Lange, and Brus 2013; Roberts, Stewart, and Nielsen 2017), library and information sciences (Hakanson 2005), linguistics and sociology (Leahey, Crockett, and Hunter 2008), and health and natural sciences (Aksnes et al. 2011; Beaudry and Lariviere 2016). This is often described as a \"Matthew effect\" whereby men as the predominant publishers in a field receive more citations, stature, and influence in their disciplines (Rossiter 1993; Reece-Evans 2010: 13). Analyses of citation data in other disciplines that have accrued that number of citations. Yet even the h-index came under scrutiny for being biased against female faculty (Symonds et al. 2006; Nosek et al. 2010; Geraci, Balsis, and Busch 2015). Self-citations can increase the h-index score, behavior that is more likely for male scholars (Fowler and Aksnes 2007; King et al. 2016). Hopkins et al. (2013) found that women in biochemistry, water resources, economics, and anthropology had h-indices that were one to four points smaller on average than their male peers. In a study of nearly 1700 social work faculty, a field where 65% of faculty are women, Carter, Smith, and Osteen (2017) showed that men had 3.86 higher h-index scores than women across all ranks, with a larger gap at the full professor rank.</p>
   </div>
-
-  <div class="legend">
-    <strong>Legend:</strong>
-    <span class="legend-item"><span class="legend-color bg-yellow"></span> Background</span>
-    <span class="legend-item"><span class="legend-color bg-blue"></span> Compare</span>
-    <span class="legend-item"><span class="legend-color bg-green"></span> Connect</span>
-  </div>
-
-  <div id="result" aria-live="polite"></div>
 
   <div class="category-menu" id="categoryMenu">
     <button onclick="applyCategory('Background')">Background</button>
@@ -71,7 +79,7 @@
       // Robust normalization for comparison:
       // - lowercase
       // - Unicode normalize (handles curly quotes, etc.)
-      // - remove all non‑alphanumeric chars (punctuation, quotes, spaces)
+      // - remove all non-alphanumeric chars (punctuation, quotes, spaces)
       return (text || '')
         .toLowerCase()
         .normalize('NFKC')
